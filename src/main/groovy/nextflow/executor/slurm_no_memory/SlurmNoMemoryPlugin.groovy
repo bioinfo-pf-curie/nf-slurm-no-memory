@@ -14,28 +14,29 @@
  * limitations under the License.
  */
 
-package cubiccurie.plugin
+package nextflow.executor.slurm_no_memory
 
 import groovy.transform.CompileStatic
 import groovy.util.logging.Slf4j
-import nextflow.Session
-import nextflow.trace.TraceObserver
+import nextflow.plugin.BasePlugin
+import org.pf4j.PluginWrapper
 
 /**
- * Implements an observer that allows implementing custom
- * logic on nextflow execution events.
+ * Nextflow plugin for slurm executor without memory
+ *
+ * @author CUBIC
  */
 @Slf4j
 @CompileStatic
-class SlurmNoMemoryObserver implements TraceObserver {
+class SlurmNoMemoryPlugin extends BasePlugin {
 
-    @Override
-    void onFlowCreate(Session session) {
-        println "Pipeline is starting! 🚀"
+    SlurmNoMemoryPlugin(PluginWrapper wrapper) {
+        super(wrapper)
     }
 
     @Override
-    void onFlowComplete() {
-        println "Pipeline complete! 👋"
+    void start() {
+        super.start()
+        log.info "SlurmNoMemory executor plugin started"
     }
 }

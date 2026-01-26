@@ -31,3 +31,19 @@ Follow these steps to publish the plugin to the Nextflow Plugin Registry:
 > [!NOTE]
 > The Nextflow Plugin registry is currently available as preview technology. Contact info@nextflow.io to learn how to get access to it.
 > 
+
+
+# Donwload plugin
+
+## Install plugin one by one
+
+nextflow plugin install <PLUGIN_NAME>@<VERSION>
+
+## Install all plugin
+Run the pipeline once, which will automatically download all plugins required by the pipeline.
+
+## Plugin Store
+
+The plugins are store in $HOME/.nextflow/plugin
+
+[text](https://nextflow.io/docs/latest/plugins/using-plugins.html)
