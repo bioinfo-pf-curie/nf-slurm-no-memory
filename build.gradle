@@ -5,7 +5,7 @@ plugins {
 version = '0.1.0'
 
 nextflowPlugin {
-    nextflowVersion = '25.10.0'
+    nextflowVersion = '24.10.0'
 
     provider = 'CUBIC-Curie'
     className = 'nextflow.executor.slurm_no_memory.SlurmNoMemoryPlugin'
@@ -33,7 +33,7 @@ configurations {
 }
 
 ext {
-    nextflowVersion = '25.10.0'
+    nextflowVersion = '24.10.0'
 }
 
 dependencies {

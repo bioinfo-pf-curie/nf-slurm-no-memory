@@ -24,7 +24,6 @@ import groovy.util.logging.Slf4j
 import nextflow.util.ServiceName
 import nextflow.fusion.FusionHelper
 import nextflow.executor.AbstractGridExecutor
-import nextflow.executor.ExecutorConfig
 import nextflow.executor.TaskArrayExecutor
 import nextflow.processor.TaskArrayRun
 import nextflow.processor.TaskConfig
@@ -32,13 +31,13 @@ import nextflow.processor.TaskRun
 import nextflow.util.MemoryUnit
 
 /**
- * Processor for SLURM resource manager without memory based on nextflow/executor/slurm
+ * Processor for SLURM resource manager
  *
  * See http://computing.llnl.gov/linux/slurm/
  * See https://github.com/nextflow-io/nextflow/blob/master/modules/nextflow/src/main/groovy/nextflow/executor/SlurmExecutor.groovy
  *
  *
- * @author CUBIC
+ * @author Paolo Di Tommaso <paolo.ditommaso@gmail.com>
  */
 @Slf4j
 @ServiceName("slurm-no-memory")
@@ -48,7 +47,6 @@ class SlurmNoMemoryExecutor extends AbstractGridExecutor implements TaskArrayExe
     static private Pattern SUBMIT_REGEX = ~/Submitted batch job (\d+)/
 
     private boolean perCpuMemAllocation
-    private boolean onlyJobState
 
     private boolean hasSignalOpt(TaskConfig config) {
         final opts = config.getClusterOptionsAsString()
@@ -82,7 +80,7 @@ class SlurmNoMemoryExecutor extends AbstractGridExecutor implements TaskArrayExe
             result << '--signal' << 'B:USR2@30'
         }
 
-        String memPerCoreConfig =  config.getExecConfigProp(name, 'memoryPerCore', null) as String
+        String memPerCoreConfig = session.getExecConfigProp(name, "memoryPerCore", null) as String
         int nbCpus = task.config.getCpus()
 
         if( memPerCoreConfig == null ) {
@@ -96,7 +94,6 @@ class SlurmNoMemoryExecutor extends AbstractGridExecutor implements TaskArrayExe
         if( task.config.getMemory() ) {
             nbCpus = Math.max(task.config.getCpus(), (int) Math.ceil((task.config.getMemory().toMega() / memPerCore)))
         }
-        
 
         if( nbCpus > 1 ) {
             result << '-c' << nbCpus.toString()
@@ -115,7 +112,7 @@ class SlurmNoMemoryExecutor extends AbstractGridExecutor implements TaskArrayExe
         addClusterOptionsDirective(task.config, result)
 
         // add slurm account from config
-        final account = config.getExecConfigProp(name, 'account', null) as String
+        final account = session.getExecConfigProp(getName(), 'account', null) as String
         if( account ) {
             result << '-A' << account
         }
@@ -169,13 +166,7 @@ class SlurmNoMemoryExecutor extends AbstractGridExecutor implements TaskArrayExe
     @Override
     protected List<String> queueStatusCommand(Object queue) {
 
-        final result = ['squeue','--noheader', '-o','%i %t', '-t', 'all']
-
-        if( onlyJobState ) {
-            result << '--only-job-state'
-            // -p and -u cannot be used with --only-job-state
-            return result
-        }
+        final result = ['squeue','--noheader','-o','%i %t', '-t', 'all']
 
         if( queue )
             result << '-p' << queue.toString()
@@ -230,8 +221,7 @@ class SlurmNoMemoryExecutor extends AbstractGridExecutor implements TaskArrayExe
     @Override
     void register() {
         super.register()
-        perCpuMemAllocation = config.getExecConfigProp(name, 'perCpuMemAllocation', false)
-        onlyJobState = config.getExecConfigProp(name, 'onlyJobState', false)
+        perCpuMemAllocation = session.getExecConfigProp(name, 'perCpuMemAllocation', false)
     }
 
     @Override
