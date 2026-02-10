@@ -1,7 +1,12 @@
 plugins {
     id 'io.nextflow.nextflow-plugin' version '1.0.0-beta.10'
+    id 'java'
+    id 'groovy'
 }
 
+ext {
+    nextflowVersion = '24.10.0'
+}
 version = '0.1.0'
 
 nextflowPlugin {
@@ -32,9 +37,6 @@ configurations {
     runtimeClasspath.exclude group: 'org.slf4j', module: 'slf4j-api'
 }
 
-ext {
-    nextflowVersion = '24.10.0'
-}
 
 dependencies {
     compileOnly "io.nextflow:nextflow:$nextflowVersion"
@@ -53,4 +55,20 @@ dependencies {
     
     testImplementation(testFixtures("io.nextflow:nextflow:$nextflowVersion"))
     testImplementation(testFixtures("io.nextflow:nf-commons:$nextflowVersion"))
+}
+
+test {
+    useJUnitPlatform()
+    testLogging {
+        // Affiche les événements (tests passés/échoués/ignorés)
+        events "passed", "skipped", "failed", "standard_out"
+        // Affiche la sortie standard (println)
+        showStandardStreams = true
+        // Niveau de détail
+        exceptionFormat "full"
+    }
+    jvmArgs([
+        '--add-opens', 'java.base/java.lang=ALL-UNNAMED',
+        '--add-opens', 'java.base/java.security=ALL-UNNAMED'
+    ])
 }
