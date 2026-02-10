@@ -54,3 +54,19 @@ dependencies {
     testImplementation(testFixtures("io.nextflow:nextflow:$nextflowVersion"))
     testImplementation(testFixtures("io.nextflow:nf-commons:$nextflowVersion"))
 }
+
+test {
+    useJUnitPlatform()
+    testLogging {
+        // Affiche les événements (tests passés/échoués/ignorés)
+        events "passed", "skipped", "failed", "standard_out"
+        // Affiche la sortie standard (println)
+        showStandardStreams = true
+        // Niveau de détail
+        exceptionFormat "full"
+    }
+    jvmArgs([
+        '--add-opens', 'java.base/java.lang=ALL-UNNAMED',
+        '--add-opens', 'java.base/java.security=ALL-UNNAMED'
+    ])
+}
