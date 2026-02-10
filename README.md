@@ -1,33 +1,93 @@
 # nf-slurm-no-memory plugin
 
-## Building
+**Optimize CPU allocation for Slurm clusters with fixed memory-per-CPU policies.**
 
-To build the plugin:
+## Introductions
+
+Some HPC clusters enforce a **fixed memory-per-CPU ratio** and do not allow users to explicitly set memory limits in Slurm job submissions. This plugin dynamically calculates the **optimal CPU count** for each Nextflow process, ensuring efficient resource allocation while respecting cluster constraints.
+
+- **Automatic CPU Calculation**: For each process, the plugin computes the required CPUs based on:
+  - The process’s requested CPU count.
+  - The memory requirement divided by the cluster’s **memory-per-CPU ratio** (default: **4 GB/CPU**).
+- **Resource Efficiency**: Avoids under-allocation (job failures) or over-allocation (wasted resources).
+
+
+## Installation
+
+From Nextflow Plugin Registry
+
+```bash
+nextflow plugin install nf-anndata
+```
+
+alternatively, you can reference the plugin in the pipeline config:
+
+```
+plugins {
+    id 'nf-anndata'
+}
+```
+
+<details>
+<summary>From Source</summary>
+
+
+1. Clone this repository:
+```bash
+git clone https://github.com/bioinfo-pf-curie/nf-slurm-no-memory.git
+cd nf-slurm-no-memory
+
+```
+
+2. Build the plugin:
 ```bash
 make assemble
 ```
 
-## Testing with Nextflow
+3. Install the plugin:
+```bash
+make install
+```
 
-The plugin can be tested without a local Nextflow installation:
+</details>
 
-1. Build and install the plugin to your local Nextflow installation: `make install`
-2. Run a pipeline with the plugin: `nextflow run hello -plugins nf-slurm-no-memory@0.1.0`
+## Usage
 
-## Publishing
+Declare the plugin in your Nextflow pipeline configuration file:
 
-Plugins can be published to a central plugin registry to make them accessible to the Nextflow community. 
+```groovy title="nextflow.config"
+plugins {
+    id "nf-slurm-no-memory@1.0.0"
+}
+```
+
+Modify your `executor` to : 
+```groovy title="nextflow.config"
+process {
+    executor = 'slurm-no-memory'
+}
+```
+
+More details are available in the Nextflow [plugin documentation](https://www.nextflow.io/docs/latest/plugins.html#plugins) and the [configuration guide](https://www.nextflow.io/docs/latest/config.html).
+
+## Params
+
+The memory-per-CPU ratio can be adjusted via the memoryPerCpu variable in your configuration:
+```groovy title="nextflow.config"
+
+executor {
+    "slurm-no-memory" {
+        memoryPerCore = "8"
+    }
+}
+```
 
 
-Follow these steps to publish the plugin to the Nextflow Plugin Registry:
+# Requirements
 
-1. Create a file named `$HOME/.gradle/gradle.properties`, where $HOME is your home directory. Add the following properties:
+    Nextflow 25.10.0 or later
+    Java 17 or later
 
-    * `npr.apiKey`: Your Nextflow Plugin Registry access token.
+# License
 
-2. Use the following command to package and create a release for your plugin on GitHub: `make release`.
-
-
-> [!NOTE]
-> The Nextflow Plugin registry is currently available as preview technology. Contact info@nextflow.io to learn how to get access to it.
-> 
+See [COPYING](COPYING) file for license information.
