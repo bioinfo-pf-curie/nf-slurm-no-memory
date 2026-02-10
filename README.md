@@ -17,14 +17,14 @@ Some HPC clusters enforce a **fixed memory-per-CPU ratio** and do not allow user
 From Nextflow Plugin Registry
 
 ```bash
-nextflow plugin install nf-anndata
+nextflow plugin install nf-slurm-no-memory
 ```
 
 alternatively, you can reference the plugin in the pipeline config:
 
 ```
 plugins {
-    id 'nf-anndata'
+    id 'nf-slurm-no-memory'
 }
 ```
 
