@@ -4,7 +4,7 @@
 
 ## Introductions
 
-Some HPC clusters enforce a **fixed memory-per-CPU ratio** and do not allow users to explicitly set memory limits in Slurm job submissions. This plugin dynamically calculates the **optimal CPU count** for each Nextflow process, ensuring efficient resource allocation while respecting cluster constraints.
+Some HPC clusters enforce a **fixed memory-per-CPU ratio** and do not allow users to explicitly set memory limits in Slurm job submissions (no --mem or --mem-per-cpu). This plugin dynamically calculates the **optimal CPU count** for each Nextflow process, ensuring efficient resource allocation while respecting cluster constraints.
 
 - **Automatic CPU Calculation**: For each process, the plugin computes the required CPUs based on:
   - The process’s requested CPU count.
