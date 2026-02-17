@@ -57,7 +57,7 @@ Declare the plugin in your Nextflow pipeline configuration file:
 
 ```groovy title="nextflow.config"
 plugins {
-    id "nf-slurm-no-memory@1.0.0"
+    id "nf-slurm-no-memory@1.0.1"
 }
 ```
 
