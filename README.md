@@ -64,7 +64,7 @@ plugins {
 Modify your `executor` to : 
 ```groovy title="nextflow.config"
 process {
-    executor = 'slurm-no-memory'
+    executor = 'slurm_no_memory'
 }
 ```
 
@@ -76,7 +76,7 @@ The memory-per-CPU ratio can be adjusted via the memoryPerCpu variable in your c
 ```groovy title="nextflow.config"
 
 executor {
-    "slurm-no-memory" {
+    $slurm_no_memory {
         memoryPerCore = "8"
     }
 }

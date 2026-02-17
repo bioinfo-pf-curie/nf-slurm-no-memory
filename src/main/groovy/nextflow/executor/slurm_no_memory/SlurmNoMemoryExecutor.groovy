@@ -25,7 +25,7 @@ import nextflow.util.MemoryUnit
  * @author CUBIC
  */
 @Slf4j
-@ServiceName("slurm-no-memory")
+@ServiceName("slurm_no_memory")
 @CompileStatic
 class SlurmNoMemoryExecutor extends AbstractGridExecutor implements TaskArrayExecutor {
 
